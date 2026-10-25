@@ -1,0 +1,327 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#141311">
+
+    <title>Lethora - Words Worth Keeping</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            color-scheme: dark;
+        }
+
+        body {
+            font-family: "DM Sans", sans-serif;
+            background: #141311;
+            color: #eae4d8;
+        }
+
+        .editorial {
+            font-family: "Playfair Display", Georgia, serif;
+        }
+
+        .paper-grain {
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.15'/%3E%3C/svg%3E");
+            opacity: 0.12;
+            pointer-events: none;
+        }
+
+        #subject {
+            color-scheme: dark;
+        }
+
+        #subject::placeholder {
+            color: #777168;
+        }
+
+        #subject:focus {
+            outline: none;
+            border-color: #b8a27b;
+            box-shadow: 0 0 0 3px rgb(184 162 123 / 12%);
+        }
+
+        #generate:disabled {
+            cursor: wait;
+            opacity: 0.65;
+        }
+
+        #quote:empty {
+            display: none;
+        }
+
+        .fade-in {
+            animation: appear 500ms ease-out both;
+        }
+
+        @keyframes appear {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen overflow-x-hidden selection:bg-[#b8a27b] selection:text-[#141311]">
+
+    <div class="paper-grain fixed inset-0 z-0"></div>
+
+    <div class="relative z-10 mx-auto flex min-h-screen w-full max-w-6xl flex-col px-6 sm:px-10">
+
+        <!-- Navigation -->
+        <header class="flex items-center justify-between border-b border-[#39352e] py-6">
+            <a href="/" class="flex items-center gap-3 no-underline">
+                <span class="editorial flex h-9 w-9 items-center justify-center border border-[#77694f] text-lg text-[#c7b18a]">
+                    L
+                </span>
+                <span class="text-sm font-semibold tracking-[0.22em] text-[#eae4d8] uppercase">
+                    Lethora
+                </span>
+            </a>
+
+            <span class="hidden text-xs tracking-[0.18em] text-[#8c8578] uppercase sm:block">
+                A play of words
+            </span>
+
+            <span class="flex items-center gap-2 text-xs text-[#a59d8e]">
+                <span class="h-1.5 w-1.5 rounded-full bg-[#a8a17c]"></span>
+                AI-assisted
+            </span>
+        </header>
+
+        <!-- Main content -->
+        <main class="flex flex-1 flex-col items-center justify-center py-16 sm:py-24">
+
+            <div class="mb-8 flex items-center gap-3">
+                <span class="h-px w-8 bg-[#887657]"></span>
+                <p class="text-[11px] font-semibold tracking-[0.28em] text-[#b8a27b] uppercase">
+                    The quote specialist
+                </p>
+                <span class="h-px w-8 bg-[#887657]"></span>
+            </div>
+
+            <h1 class="editorial max-w-3xl text-center text-5xl leading-[1.12] font-medium tracking-tight text-[#eee7da] sm:text-7xl">
+                Some words<br>
+                <span class="italic text-[#b8a27b]">stay with us.</span>
+            </h1>
+
+            <p class="mt-6 max-w-md text-center text-sm leading-7 text-[#a59d8e] sm:text-base">
+                A thought, a feeling, a little perspective.
+                Find the words for whatever is on your mind.
+            </p>
+
+            <!-- Generator form -->
+            <form id="quote-form" class="mt-12 w-full max-w-lg">
+                <label for="subject" class="mb-3 block text-xs font-semibold tracking-[0.16em] text-[#c4bcad] uppercase">
+                    Let's reflect on...
+                </label>
+
+                <div class="flex flex-col gap-3 sm:flex-row">
+                    <input
+                        id="subject"
+                        name="subject"
+                        type="text"
+                        value="courage"
+                        placeholder="e.g. courage, change, love..."
+                        maxlength="100"
+                        required
+                        class="min-w-0 flex-1 rounded-sm border border-[#403b33] bg-[#1d1b17] px-4 py-4 text-sm text-[#eee7da] transition placeholder:text-[#777168]"
+                    >
+
+                    <button
+                        id="generate"
+                        type="submit"
+                        class="group flex items-center justify-center gap-3 rounded-sm bg-[#b8a27b] px-6 py-4 text-xs font-bold tracking-[0.12em] text-[#171510] uppercase transition hover:bg-[#d0bc96] disabled:cursor-wait"
+                    >
+                        <span id="button-label">Find my words</span>
+                        <span aria-hidden="true" class="text-base transition-transform group-hover:translate-x-1">→</span>
+                    </button>
+                </div>
+
+                <p class="mt-3 text-xs text-[#777168]">
+                    Every subject opens a new page.
+                </p>
+            </form>
+
+            <!-- Status -->
+            <div class="mt-10 flex min-h-8 items-center justify-center gap-3" aria-live="polite">
+                <span id="loading-indicator" class="hidden h-4 w-4 animate-spin rounded-full border border-[#514a3d] border-t-[#b8a27b]"></span>
+                <p id="message" class="text-center text-sm text-[#a59d8e]"></p>
+            </div>
+
+            <!-- Result card -->
+            <section id="result-card" class="hidden mt-3 w-full max-w-2xl">
+                <div class="border border-[#403b33] bg-[#1b1915] px-6 py-9 sm:px-12 sm:py-12">
+                    <div class="mb-8 flex items-center justify-between">
+                        <span class="text-[10px] font-semibold tracking-[0.24em] text-[#b8a27b] uppercase">
+                            A thought to keep
+                        </span>
+                        <span aria-hidden="true" class="editorial text-3xl text-[#6d6048]">“</span>
+                    </div>
+
+                    <blockquote id="quote" class="editorial text-2xl leading-relaxed text-[#eee7da] sm:text-3xl"></blockquote>
+
+                    <div class="mt-9 flex items-center justify-between border-t border-[#39352e] pt-5">
+                        <span id="quote-subject" class="text-xs tracking-wide text-[#a59d8e]"></span>
+                        <button
+                            id="copy-quote"
+                            type="button"
+                            class="text-xs font-medium tracking-wide text-[#c7b18a] transition hover:text-[#eee7da]"
+                        >
+                            Copy quote ↗
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <p class="mt-10 text-center text-xs text-[#777168]">
+                Made for the moments that call for a little perspective.
+            </p>
+        </main>
+
+        <!-- Footer -->
+        <footer class="flex flex-col items-center justify-between gap-3 border-t border-[#39352e] py-6 text-xs text-[#777168] sm:flex-row">
+            <span>Lethora © 2026</span>
+            <span>One thought at a time.</span>
+        </footer>
+    </div>
+
+    <script>
+        const subjectInput = document.getElementById("subject");
+        const generateButton = document.getElementById("generate");
+        const buttonLabel = document.getElementById("button-label");
+        const form = document.getElementById("quote-form");
+        const message = document.getElementById("message");
+        const quoteElement = document.getElementById("quote");
+        const resultCard = document.getElementById("result-card");
+        const quoteSubject = document.getElementById("quote-subject");
+        const loadingIndicator = document.getElementById("loading-indicator");
+        const copyButton = document.getElementById("copy-quote");
+
+        function setLoading(isLoading) {
+            generateButton.disabled = isLoading;
+            subjectInput.disabled = isLoading;
+            loadingIndicator.classList.toggle("hidden", !isLoading);
+            buttonLabel.textContent = isLoading ? "Finding words..." : "Find my words";
+        }
+
+        function setMessage(text, isError = false) {
+            message.textContent = text;
+            message.classList.toggle("text-red-300", isError);
+            message.classList.toggle("text-[#a59d8e]", !isError);
+        }
+
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const subject = subjectInput.value.trim();
+
+            if (!subject) {
+                setMessage("Please enter a subject to begin.", true);
+                subjectInput.focus();
+                return;
+            }
+
+            setLoading(true);
+            resultCard.classList.add("hidden");
+            quoteElement.textContent = "";
+            setMessage("Turning a thought into words...");
+
+            try {
+                const createResponse = await fetch(
+                    `/submit-subject?subject=${encodeURIComponent(subject)}`
+                );
+
+                if (!createResponse.ok) {
+                    throw new Error("We couldn't start your quote. Please try again.");
+                }
+
+                const job = await createResponse.json();
+                const jobId = job.job_id;
+                const deadline = Date.now() + 90000;
+
+                setMessage("A little patience. Good words take a moment.");
+
+                while (Date.now() < deadline) {
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+
+                    const statusResponse = await fetch(
+                        `/quote-jobs/${encodeURIComponent(jobId)}`
+                    );
+
+                    if (!statusResponse.ok) {
+                        throw new Error("We couldn't retrieve your quote. Please try again.");
+                    }
+
+                    const result = await statusResponse.json();
+
+                    if (result.status === "success") {
+                        quoteElement.textContent = result.quote;
+                        quoteSubject.textContent = `ON ${result.subject || subject}`.toUpperCase();
+
+                        resultCard.classList.remove("hidden");
+                        resultCard.classList.remove("fade-in");
+                        void resultCard.offsetWidth;
+                        resultCard.classList.add("fade-in");
+
+                        setMessage("A thought, just for you.");
+                        break;
+                    }
+
+                    if (result.status === "failed") {
+                        throw new Error("This quote eluded us. Please try another subject.");
+                    }
+
+                    setMessage("Your words are on their way...");
+                }
+
+                if (!resultCard.classList.contains("hidden")) {
+                    // The quote was generated successfully.
+                } else if (Date.now() >= deadline) {
+                    throw new Error("This is taking longer than expected. Please try again shortly.");
+                }
+            } catch (error) {
+                setMessage(error.message || "Something went wrong. Please try again.", true);
+            } finally {
+                setLoading(false);
+            }
+        });
+
+        copyButton.addEventListener("click", async () => {
+            const quote = quoteElement.textContent;
+
+            if (!quote) return;
+
+            try {
+                await navigator.clipboard.writeText(quote);
+                copyButton.textContent = "Copied ✓";
+                setTimeout(() => {
+                    copyButton.textContent = "Copy quote ↗";
+                }, 1800);
+            } catch {
+                setMessage("Copy isn't available here. You can select the quote and copy it manually.", true);
+            }
+        });
+    </script>
+</body>
+</html>

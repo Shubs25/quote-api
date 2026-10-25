@@ -1,3 +1,4 @@
+import os
 
 AION_API_KEY = 'AION_API_KEY'
 INVALID_API_KEY = 'INVALID_API_KEY'
@@ -106,3 +107,12 @@ RANDOM_SUBJECT_LIST = [
     "NATURE",
     "THE UNIVERSE"
 ]
+
+RABBITMQ_HOST = os.getenv("RABBITMQ_HOST", "localhost")
+RABBITMQ_PORT = int(os.getenv("RABBITMQ_PORT", "5672"))
+RABBITMQ_USER = os.getenv("RABBITMQ_USER", "guest")
+RABBITMQ_PASSWORD = os.getenv("RABBITMQ_PASSWORD", "guest")
+
+REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
+REDIS_PORT = int(os.getenv("REDIS_PORT", "6379"))
+REDIS_JOB_ID_PREFIX = 'quote_job:'
