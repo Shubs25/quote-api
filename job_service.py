@@ -6,7 +6,17 @@ import redis
 
 import constants
 
-redis_client = redis.Redis(host=constants.REDIS_HOST, port=constants.REDIS_PORT, decode_responses=True)
+if constants.REDIS_URL:
+    redis_client = redis.Redis.from_url(
+        constants.REDIS_URL,
+        decode_responses=True
+    )
+else:
+    redis_client = redis.Redis(
+        host=constants.REDIS_HOST,
+        port=constants.REDIS_PORT,
+        decode_responses=True
+    )
 
 def create_quote_job(subject: str):
     job_id = str(uuid.uuid4())
@@ -28,17 +38,22 @@ def create_quote_job(subject: str):
 
     connection = None
     try:
-        connection = pika.BlockingConnection(
-            pika.ConnectionParameters(host=constants.RABBITMQ_HOST,
-                                      port=constants.RABBITMQ_PORT,
-                                      credentials=pika.PlainCredentials(
-                                          constants.RABBITMQ_USER,
-                                          constants.RABBITMQ_PASSWORD
-                                        )
-                                      )
+        if constants.RABBITMQ_URL:
+            connection_parameters = pika.URLParameters(
+                constants.RABBITMQ_URL
             )
+        else:
+            connection_parameters = pika.ConnectionParameters(
+                host=constants.RABBITMQ_HOST,
+                port=constants.RABBITMQ_PORT,
+                credentials=pika.PlainCredentials(
+                    constants.RABBITMQ_USER,
+                    constants.RABBITMQ_PASSWORD
+                )
+            )
+        connection = pika.BlockingConnection(connection_parameters)
         channel = connection.channel()
-        channel.queue_declare(queue='queue1', durable=True, arguments={'x-queue-type': 'quorum'})
+        channel.queue_declare(queue='queue1', durable=True, arguments={'x-queue-type': constants.RABBITMQ_QUEUE_TYPE})
 
         channel.confirm_delivery()
         channel.basic_publish(

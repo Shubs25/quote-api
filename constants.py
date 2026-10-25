@@ -112,7 +112,13 @@ RABBITMQ_HOST = os.getenv("RABBITMQ_HOST", "localhost")
 RABBITMQ_PORT = int(os.getenv("RABBITMQ_PORT", "5672"))
 RABBITMQ_USER = os.getenv("RABBITMQ_USER", "guest")
 RABBITMQ_PASSWORD = os.getenv("RABBITMQ_PASSWORD", "guest")
+RABBITMQ_URL = os.getenv("RABBITMQ_URL")
+RABBITMQ_QUEUE_TYPE = os.getenv(
+    "RABBITMQ_QUEUE_TYPE",
+    "quorum"
+)
 
 REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
 REDIS_PORT = int(os.getenv("REDIS_PORT", "6379"))
 REDIS_JOB_ID_PREFIX = 'quote_job:'
+REDIS_URL = os.getenv("REDIS_URL")
