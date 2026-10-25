@@ -4,12 +4,13 @@ import uuid
 import pika
 import redis
 
+import constants
 
-redis_client = redis.Redis(host='localhost', port=6379, decode_responses=True)
+redis_client = redis.Redis(host=constants.REDIS_HOST, port=constants.REDIS_PORT, decode_responses=True)
 
 def create_quote_job(subject: str):
     job_id = str(uuid.uuid4())
-    redis_key = f'quote_job:{job_id}'
+    redis_key = f'{constants.REDIS_JOB_ID_PREFIX}{job_id}'
 
     redis_client.hset(
         redis_key,
@@ -27,7 +28,15 @@ def create_quote_job(subject: str):
 
     connection = None
     try:
-        connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+        connection = pika.BlockingConnection(
+            pika.ConnectionParameters(host=constants.RABBITMQ_HOST,
+                                      port=constants.RABBITMQ_PORT,
+                                      credentials=pika.PlainCredentials(
+                                          constants.RABBITMQ_USER,
+                                          constants.RABBITMQ_PASSWORD
+                                        )
+                                      )
+            )
         channel = connection.channel()
         channel.queue_declare(queue='queue1', durable=True, arguments={'x-queue-type': 'quorum'})
 

@@ -64,9 +64,9 @@ def quote_job(job_id: str = fastapi.param_functions.Path(min_length=1, max_lengt
             detail="A Job ID must be provided"
         )
 
-    with redis.Redis(host='localhost', port=6379, decode_responses=True) as redis_client:
+    with redis.Redis(host=constants.REDIS_HOST, port=constants.REDIS_PORT, decode_responses=True) as redis_client:
         try:
-            job_status = redis_client.hget(f"quote_job:{job_id}", "status")
+            job_status = redis_client.hget(f"{constants.REDIS_JOB_ID_PREFIX}{job_id}", "status")
             if not job_status:
                 raise HTTPException(
                     status_code=status.HTTP_404_NOT_FOUND,
@@ -78,7 +78,7 @@ def quote_job(job_id: str = fastapi.param_functions.Path(min_length=1, max_lengt
                     "status": job_status,
                     "message": "Your quote is being generated"
                 }
-            return redis_client.hgetall(f"quote_job:{job_id}")
+            return redis_client.hgetall(f"{constants.REDIS_JOB_ID_PREFIX}{job_id}")
         except HTTPException:
             raise
         except Exception:
